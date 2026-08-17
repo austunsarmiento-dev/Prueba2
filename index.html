@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#5c2030">
+<title>Te amo mi niña linda ❤️</title>
+
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;min-height:100%;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Inter,Arial,sans-serif;background:#080808;color:#fff}
+body{overflow:hidden}
+button{font:inherit;border:0;color:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+
+/* ---------- Bienvenida ---------- */
+#welcome{
+  position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:28px;
+  background:radial-gradient(circle at 50% 20%,rgba(255,180,200,.20),transparent 45%),linear-gradient(145deg,#2c0f1a,#080808);
+  transition:opacity .65s ease,visibility .65s ease
+}
+#welcome.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.welcome-card{width:min(430px,100%);text-align:center}
+.heart{
+  width:90px;height:90px;margin:0 auto 27px;display:grid;place-items:center;border-radius:50%;
+  background:rgba(255,80,120,.15);font-size:42px;box-shadow:0 20px 60px rgba(255,80,120,.25);
+  animation: latido 1.2s ease-in-out infinite
+}
+@keyframes latido{
+  0%,100%{transform:scale(1)}
+  50%{transform:scale(1.1)}
+}
+.welcome-card h1{
+  margin:0 0 12px;font-size:clamp(32px,8vw,48px);line-height:1.04;letter-spacing:-.045em;
+  background:linear-gradient(90deg,#ff7e9f,#ffb3c1);
+  -webkit-background-clip:text;background-clip:text;color:transparent
+}
+.welcome-card p{color:rgba(255,200,210,.75);font-size:17px;margin-bottom:35px}
+#openBtn{
+  min-width:200px;padding:16px 34px;border-radius:999px;
+  background:linear-gradient(135deg,#ff4d6d,#ff6b8a);color:#fff;font-weight:700;font-size:17px;
+  box-shadow:0 14px 35px rgba(255,77,108,.4);transition:transform .18s,box-shadow .2s
+}
+#openBtn:active{transform:scale(.94);box-shadow:0 8px 20px rgba(255,77,108,.3)}
+.corazones-fondo{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.corazon{position:absolute;color:rgba(255,150,180,.2);font-size:24px;animation:flotar 8s ease-in-out infinite}
+@keyframes flotar{
+  0%{transform:translateY(100vh) rotate(0deg);opacity:0}
+  10%{opacity:1}
+  90%{opacity:1}
+  100%{transform:translateY(-50px) rotate(360deg);opacity:0}
+}
+
+/* ---------- Fondo dinámico ---------- */
+#app{
+  position:relative;min-height:100svh;display:grid;place-items:center;overflow:hidden;
+  opacity:0;transition:opacity .8s ease
+}
+#app.visible{opacity:1}
+.background{
+  position:absolute;inset:-50px;background-image:url("assets/background.jpg");
+  background-size:cover;background-position:center;filter:blur(28px);transform:scale(1.14);
+  opacity:.65;transition:filter .7s ease,opacity .7s ease,transform .7s ease
+}
+.background::after{
+  content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,5,10,.40),rgba(10,5,8,.50))
+}
+.colorwash{
+  position:absolute;inset:0;background:rgba(80,80,80,.28);mix-blend-mode:soft-light;
+  transition:background .7s ease
+}
+
+/* ---------- Reproductor ---------- */
+.player{
+  position:relative;z-index:2;width:min(440px,94vw);min-height:100svh;
+  padding:30px 22px max(26px,env(safe-area-inset-bottom));display:flex;flex-direction:column;justify-content:center
+}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;color:rgba(255,255,255,.75);font-size:13px;text-transform:uppercase;letter-spacing:.15em}
+.topbar .mini-heart{font-size:22px;letter-spacing:0;text-transform:none;color:#ff7e9f}
+.cover-wrap{
+  width:min(340px,80vw);aspect-ratio:1;margin:0 auto 28px;border-radius:26px;overflow:hidden;
+  box-shadow:0 28px 75px rgba(255,80,120,.35);background:rgba(255,255,255,.08);
+  transition:transform .45s ease,box-shadow .45s ease
+}
+.cover-wrap.change{transform:scale(.97)}
+#cover{width:100%;height:100%;object-fit:cover;display:block;transition:opacity .25s ease}
+.song-info{margin-bottom:17px;text-align:left}
+#title{margin:0;font-size:29px;line-height:1.08;letter-spacing:-.04em}
+#artist{margin:7px 0 0;color:rgba(255,200,210,.8);font-size:17px}
+.progress-area{margin-top:12px}
+#progress{
+  width:100%;height:5px;appearance:none;border-radius:99px;outline:none;cursor:pointer;
+  background:linear-gradient(to right,#ff5a7c 0%,rgba(255,100,130,.3) 0%)
+}
+#progress::-webkit-slider-thumb{appearance:none;width:14px;height:14px;border-radius:50%;background:#ff5a7c;box-shadow:0 0 10px rgba(255,90,124,.5)}
+#progress::-moz-range-thumb{width:14px;height:14px;border:0;border-radius:50%;background:#ff5a7c}
+.times{display:flex;justify-content:space-between;margin-top:7px;color:rgba(255,200,210,.6);font-size:13px;font-variant-numeric:tabular-nums}
+.controls{display:flex;align-items:center;justify-content:center;gap:34px;margin-top:26px}
+.control{width:52px;height:52px;display:grid;place-items:center;background:rgba(255,255,255,.05);border-radius:50%;font-size:28px;transition:all .15s ease}
+.control:hover{background:rgba(255,255,255,.12)}
+.control:active{transform:scale(.85)}
+#play{width:74px;height:74px;border-radius:50%;background:linear-gradient(135deg,#ff4d6d,#ff6b8a);color:#fff;font-size:32px;box-shadow:0 12px 32px rgba(255,77,108,.4)}
+#play:hover{transform:scale(1.05)}
+.hint{margin-top:24px;text-align:center;color:rgba(255,200,210,.5);font-size:13px}
+.hint span{color:#ff7e9f}
+#youtube-player{position:fixed;width:1px;height:1px;left:-20px;bottom:-20px;opacity:0;pointer-events:none}
+
+@media(max-height:700px){
+  .player{padding-top:15px}
+  .cover-wrap{width:min(285px,67vw);margin-bottom:17px}
+  #title{font-size:24px}
+  .controls{margin-top:14px}
+}
+</style>
+</head>
+
+<body>
+<section id="welcome">
+  <div class="corazones-fondo" id="corazonesFondo"></div>
+  <div class="welcome-card">
+    <div class="heart">❤️</div>
+    <h1>Te amo mi niña linda</h1>
+    <p>Un detalle para ti, con todo mi amor ♡</p>
+    <button id="openBtn">Abrir 🎶</button>
+  </div>
+</section>
+
+<main id="app">
+  <div class="background"></div>
+  <div class="colorwash"></div>
+
+  <section class="player">
+    <div class="topbar">
+      <span>Nuestra playlist</span>
+      <span class="mini-heart">♡</span>
+    </div>
+
+    <div class="cover-wrap" id="coverWrap">
+      <img id="cover" src="assets/cover-vamonos.jpg" alt="Portada de Vámonos a Marte">
+    </div>
+
+    <div class="song-info">
+      <h2 id="title">Vámonos a Marte</h2>
+      <p id="artist">Kevin Kaarl</p>
+    </div>
+
+    <div class="progress-area">
+      <input id="progress" type="range" min="0" max="100" value="0" step=".1" aria-label="Progreso de la canción">
+      <div class="times">
+        <span id="currentTime">0:00</span>
+        <span id="duration">0:00</span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="control" id="prev" aria-label="Canción anterior">⏮</button>
+      <button class="control" id="play" aria-label="Reproducir">▶</button>
+      <button class="control" id="next" aria-label="Siguiente canción">⏭</button>
+    </div>
+
+    <div class="hint">Hecho con <span>❤️</span> para ti</div>
+  </section>
+</main>
+
+<div id="youtube-player"></div>
+
+<script>
+// Generar corazones flotantes 💕
+const corazonesFondo = document.getElementById("corazonesFondo");
+for(let i=0;i<15;i++){
+  const c=document.createElement("span");
+  c.className="corazon";
+  c.textContent="❤️";
+  c.style.left=Math.random()*100+"%";
+  c.style.animationDelay=Math.random()*8+"s";
+  c.style.fontSize=(12+Math.random()*18)+"px";
+  corazonesFondo.appendChild(c);
+}
+
+const songs=[
+  {title:"Vámonos a Marte",artist:"Kevin Kaarl",videoId:"er2upfZf_cg",cover:"assets/cover-vamonos.jpg",wash:"rgba(210,120,100,.45)"},
+  {title:"Ella",artist:"Paulo Londra",videoId:"qz0WjbGlmv0",cover:"assets/cover-ella.jpg",wash:"rgba(190,90,20,.44)"},
+  {title:"Abrazado a ti",artist:"Kevin Kaarl",videoId:"wjNgoUMj5PE",cover:"assets/cover-abrazado.png",wash:"rgba(80,150,120,.40)"},
+  {title:"Ropa de bazar",artist:"Ed Maverick ft. Bratty",videoId:"pquJZEwPBjM",cover:"assets/cover-ropa.jpg",wash:"rgba(150,100,120,.42)"}
+];
+
+let currentSong=0,player=null,playerReady=false,timer=null;
+
+const welcome=document.getElementById("welcome");
+const app=document.getElementById("app");
+const openBtn=document.getElementById("openBtn");
+const cover=document.getElementById("cover");
+const coverWrap=document.getElementById("coverWrap");
+const title=document.getElementById("title");
+const artist=document.getElementById("artist");
+const playBtn=document.getElementById("play");
+const progress=document.getElementById("progress");
+const currentTime=document.getElementById("currentTime");
+const duration=document.getElementById("duration");
+const colorwash=document.querySelector(".colorwash");
+
+function formatTime(s){
+  if(!Number.isFinite(s)) return "0:00";
+  return Math.floor(s/60)+":"+String(Math.floor(s%60)).padStart(2,"0");
+}
+
+function updateUI(){
+  const song=songs[currentSong];
+  coverWrap.classList.add("change");
+  cover.style.opacity="0";
+  colorwash.style.background=song.wash;
+
+  setTimeout(()=>{
+    cover.src=song.cover;
+    cover.alt="Portada de "+song.title;
+    cover.style.opacity="1";
+    coverWrap.classList.remove("change");
+  },140);
+
+  title.textContent=song.title;
+  artist.textContent=song.artist;
+  document.title=song.title+" — Te amo mi niña linda ❤️";
+}
+
+function resetProgress(){
+  progress.value=0;
+  progress.style.background="linear-gradient(to right,#ff5a7c 0%,rgba(255,100,130,.3) 0%)";
+  currentTime.textContent="0:00";
+  duration.textContent="0:00";
+}
+
+function loadSong(index,autoplay=true){
+  currentSong=(index+songs.length)%songs.length;
+  updateUI();
+  resetProgress();
+  if(!playerReady)return;
+  player.loadVideoById(songs[currentSong].videoId);
+  if(autoplay){player.playVideo();playBtn.textContent="❚❚"}
+  else playBtn.textContent="▶";
+}
+
+function togglePlay(){
+  if(!playerReady)return;
+  const state=player.getPlayerState();
+  if(state===YT.PlayerState.PLAYING)player.pauseVideo();
+  else player.playVideo();
+}
+
+function updateProgress(){
+  if(!playerReady)return;
+  const total=player.getDuration(),now=player.getCurrentTime();
+  if(total>0){
+    const pct=(now/total)*100;
+    progress.value=pct;
+    progress.style.background=`linear-gradient(to right,#ff5a7c ${pct}%,rgba(255,100,130,.3) ${pct}%)`;
+    currentTime.textContent=formatTime(now);
+    duration.textContent=formatTime(total);
+  }
+}
+
+openBtn.addEventListener("click",()=>{
+  welcome.classList.add("hidden");
+  app.classList.add("visible");
+  if(playerReady){player.playVideo();playBtn.textContent="❚❚"}
+});
+
+playBtn.addEventListener("click",togglePlay);
+document.getElementById("prev").addEventListener("click",()=>loadSong(currentSong-1,true));
+document.getElementById("next").addEventListener("click",()=>loadSong(currentSong+1,true));
+
+progress.addEventListener("input",()=>{
+  if(!playerReady)return;
+  const total=player.getDuration();
+  const target=(Number(progress.value)/100)*total;
+  player.seekTo(target,true);
+  currentTime.textContent=formatTime(target);
+  progress.style.background=`linear-gradient(to right,#ff5a7c ${progress.value}%,rgba(255,100,130,.3) ${progress.value}%)`;
+});
+
+function onYouTubeIframeAPIReady(){
+  player=new YT.Player("youtube-player",{
+    videoId:songs[0].videoId,
+    playerVars:{autoplay:0,controls:0,disablekb:1,playsinline:1,rel:0},
+    events:{
+      onReady:()=>{
+        playerReady=true;
+        duration.textContent=formatTime(player.getDuration());
+        timer=setInterval(updateProgress,500);
+      },
+      onStateChange:(event)=>{
+        if(event.data===YT.PlayerState.PLAYING)playBtn.textContent="❚❚";
+        if(event.data===YT.PlayerState.PAUSED)playBtn.textContent="▶";
+        if(event.data===YT.PlayerState.ENDED)loadSong(currentSong+1,true);
+      }
+    }
+  });
+}
+
+updateUI();
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
